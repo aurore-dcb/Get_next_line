@@ -37,10 +37,13 @@ char *get_next_line(int fd)
     char *ligne;
 
     res = 1;
+    fd = 4;
     while (is_new_line(stash) < 0 && res != 0)
     {
         res = read(fd, buf, BUFF_SIZE);
         buf[res] = '\0';
+        if (res == -1)
+            return (NULL);
         if (res != 0)
         {
             ft_strcat(stash, buf);
