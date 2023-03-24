@@ -49,7 +49,16 @@ char *just_the_line(char str[])
         return (NULL);
     while (str[i] && str[i] != '\n')
         i++;
-    res = malloc(sizeof(char) * (i + 2));
+    if (is_new_line(str) >= 0)
+    {
+        // printf("test1");
+        res = malloc(sizeof(char) * (i + 2));
+    }
+    else
+    {
+        // printf("test2");
+        res = malloc(sizeof(char) * (i + 1));
+    }
     if (!res)
         return (NULL);
     i = 0;
