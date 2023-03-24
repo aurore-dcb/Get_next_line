@@ -3,6 +3,8 @@
 char *ft_strcat(char *dst, char *src)
 {
     // printf("stash dans strcat:\n%s|\n", dst);
+    // printf("src (buf) : %s|\n", src);
+    // printf("dst (stash) : %s|\n\n", dst);
     int i;
     int j;
 
@@ -12,8 +14,21 @@ char *ft_strcat(char *dst, char *src)
         return (NULL);
     while (dst[i])
         i++;
+    // printf("i = %d\n", i);
+    // printf("src (buf) : %s|\n", src);
     while (src[j])
-        dst[i++] = src[j++];
+    {
+        dst[i] = src[j];
+        // printf("dst[%d] : %c\n", i, dst[i]);
+        i++;
+        j++;
+    }
+    dst[i] = '\0';
+    // printf("dst[%d] : %c\n", i, dst[i]);
+    // i++;
+    // printf("dst[%d] : %c\n", i, dst[i]);
+    // printf("j = %d\n", j);
+    // printf("stash fin strcat:\n%s|\n", dst);
     return (dst);   
 }
 
@@ -108,31 +123,30 @@ char *get_next_line(int fd)
     int res;
     char *ligne;
 
-    // printf("stash debut : %s.\n", stash);
+    // printf("stash debut : %s|\n", stash);
     res = 1;
     while (is_new_line(stash) < 0 && res != 0)
     {
         res = read(fd, buf, BUFF_SIZE);
+        // printf("stash : %s\n", stash);
         if (res != 0)
         {
             // if (res < BUFF_SIZE)
             // {
                 
             // }
-            ft_strcat(stash, buf);
+            // printf("res = %d\n", res);
             // printf("buf : %s\n", buf);
+            // printf("stash : %s\n", stash);
+            ft_strcat(stash, buf);
             clean_buf(buf);
             // printf("stash : %s\n", stash);
         }
     }
     if (res == -1)
-    {
-        write(1, "erreur pendant la lecture du fichier.\n", 38);
         return (NULL);
-    }
-    // printf("stash : |%s|\n", stash);
+    // printf("stash fin : %s|\n", stash);
     ligne = just_the_line(stash);
-    // printf("ligne : |%s|\n", ligne);
     modif_stash(stash);
     return (ligne);
 }

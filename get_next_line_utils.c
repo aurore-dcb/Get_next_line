@@ -21,4 +21,5 @@ void modif_stash(char *stash)
         }
         stash[j] = '\0';
     }
+    // printf("modif stash : %s|\n", stash);
 }
