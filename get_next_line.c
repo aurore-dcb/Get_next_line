@@ -37,7 +37,6 @@ char *get_next_line(int fd)
     char *ligne;
 
     res = 1;
-    fd = 4;
     while (is_new_line(stash) < 0 && res != 0)
     {
         res = read(fd, buf, BUFF_SIZE);
