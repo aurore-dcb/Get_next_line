@@ -47,6 +47,8 @@ char *clean_stash(char *stash)
         return (NULL);
     while (stash[i] && stash[i++] != '\n')
         j++;
+    if (stash[i] == '\n')
+        i++;
     while (stash[i])
         compteur++;
     res = malloc(sizeof(char) * (compteur + 1));
@@ -67,18 +69,13 @@ char *just_the_line(char str[])
 {
     int i;
     char *res;
-    // int len;
 
     i = 0;
-    // len = 0;
-    // while (str[i] && str[i] == 'A')
-    // {
-    //     printf("ya A\n");
-    //     i++;
-    // }
-    while (str[i] && str[i++] != '\n')
+    if (!str[0])
+        return (NULL);
+    while (str[i] && str[i] != '\n')
         i++;
-    res = malloc(sizeof(char) * (i + 1));
+    res = malloc(sizeof(char) * (i + 2));
     if (!res)
         return (NULL);
     i = 0;
@@ -92,53 +89,50 @@ char *just_the_line(char str[])
     return (res);
 }
 
+void clean_buf(char *buf)
+{
+    int i;
+
+    i = 0;
+    if (buf)
+    {
+        while (buf[i])
+            buf[i++] = '\0';
+    }
+}
+
 char *get_next_line(int fd)
 {
-    // printf("buf size : %d\n", BUFF_SIZE);
     static char stash[FD_SIZE];
-    // printf("stash debut : %s.\n", stash);
     char buf[BUFF_SIZE + 1];
     int res;
+    char *ligne;
 
-    int i = 0;
-    while (stash[i] && stash[i] != '\n')
-    {
-        // printf("test");
-        stash[i] = 'A';
-        i++;
-    }
-    // printf("TEST :.%c.\n", stash[i]);
-    stash[i] = 'A';
-    // while (stash[i])
-    // {
-    //     printf("test");
-    //     // stash[i] = '\0';
-    //     i++;
-    // }
-    // printf("\n");
-
+    // printf("stash debut : %s.\n", stash);
     res = 1;
-    // printf("stash[0] : %c.\n", stash[0]);
-    // printf("stash inter : %s.\n", stash);
     while (is_new_line(stash) < 0 && res != 0)
     {
         res = read(fd, buf, BUFF_SIZE);
-        // printf("BUF:\n%s|\n", buf);
         if (res != 0)
+        {
+            // if (res < BUFF_SIZE)
+            // {
+                
+            // }
             ft_strcat(stash, buf);
-        // printf("1res = %d\n", res);
-        // printf("2stash : %s..\n", stash);
+            // printf("buf : %s\n", buf);
+            clean_buf(buf);
+            // printf("stash : %s\n", stash);
+        }
     }
-    // buf[taille_buf] = '\0';
     if (res == -1)
     {
         write(1, "erreur pendant la lecture du fichier.\n", 38);
         return (NULL);
     }
-    // printf("stash avant return:\n%s|\n", stash);
-    //FAIRE LE MENAGE
-    
-    // stash = clean_stash(stash);
-    return (just_the_line(stash));
-    // return (stash);
+    // printf("stash : |%s|\n", stash);
+    ligne = just_the_line(stash);
+    // printf("ligne : |%s|\n", ligne);
+    modif_stash(stash);
+    return (ligne);
 }

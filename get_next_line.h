@@ -17,4 +17,5 @@
 /*fonctions autorisées : read, malloc, free*/
 
 char *get_next_line(int fd);
+void modif_stash(char *stash);
 #endif
