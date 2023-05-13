@@ -6,7 +6,7 @@
 /*   By: aducobu <aducobu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:15:28 by aducobu           #+#    #+#             */
-/*   Updated: 2023/05/03 16:45:15 by aducobu          ###   ########.fr       */
+/*   Updated: 2023/05/13 15:40:08 by aducobu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	modif_stash(char *stash)
 
 	i = 0;
 	j = 0;
+	if (!stash)
+		return ;
 	while (stash[i] && stash[i] != '\n')
 	{
 		stash[i] = '\0';
@@ -37,7 +39,43 @@ void	modif_stash(char *stash)
 	}
 }
 
-int	is_new_line(char *line)
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+char	*clean_stash(char *stash)
+{
+	int		i;
+	int		j;
+	char	*new_stash;
+
+	i = 0;
+	if (!stash)
+		return (NULL);
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] && stash[i] == '\n')
+		i++;
+	new_stash = (char *)malloc(sizeof(char) * (ft_strlen(stash) - i + 1));
+	if (!new_stash)
+		return (free(stash), NULL);
+	j = 0;
+	while (stash[i])
+		new_stash[j++] = stash[i++];
+	new_stash[j] = '\0';
+	free(stash);
+	return (new_stash);
+}
+
+int	ft_new_line(char *line)
 {
 	int	i;
 
@@ -53,29 +91,29 @@ int	is_new_line(char *line)
 	return (-1);
 }
 
-char	*just_the_line(char str[])
+char	*just_the_line(char *stash)
 {
 	int		i;
 	char	*res;
 
 	i = 0;
-	if (str[0] == '\0')
+	if (!stash || stash[0] == '\0')
 		return (NULL);
-	while (str[i] && str[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (is_new_line(str) >= 0)
+	if (ft_new_line(stash) >= 0)
 		res = malloc(sizeof(char) * (i + 2));
 	else
 		res = malloc(sizeof(char) * (i + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
-	while (str[i] && str[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 	{
-		res[i] = str[i];
+		res[i] = stash[i];
 		i++;
 	}
-	if (str[i] == '\n')
+	if (stash[i] == '\n')
 		res[i++] = '\n';
 	res[i] = '\0';
 	return (res);

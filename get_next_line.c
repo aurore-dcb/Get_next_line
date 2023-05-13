@@ -6,7 +6,7 @@
 /*   By: aducobu <aducobu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:15:10 by aducobu           #+#    #+#             */
-/*   Updated: 2023/05/03 16:56:19 by aducobu          ###   ########.fr       */
+/*   Updated: 2023/05/13 15:31:50 by aducobu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,33 @@ char	*ft_strcat(char *dst, char *src)
 	return (dst);
 }
 
+char	*ft_strjoin(char *stash, char *buf)
+{
+	char	*res;
+	int		i;
+
+	if (!stash && !buf)
+		return (NULL);
+	res = malloc(sizeof(char) * (ft_strlen(stash) + ft_strlen(buf) + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (stash && stash[i])
+	{
+		res[i] = stash[i];
+		i++;
+	}
+	i = 0;
+	while (buf && buf[i])
+	{
+		res[i + ft_strlen(stash)] = buf[i];
+		i++;
+	}
+	res[i + ft_strlen(stash)] = '\0';
+	free(stash);
+	return (res);
+}
+
 void	clean_buf(char *buf)
 {
 	int	i;
@@ -41,29 +68,46 @@ void	clean_buf(char *buf)
 	}
 }
 
-char	*get_next_line(int fd)
+char	*create_stash(char *stash, int fd, char *buf)
 {
-	int			res;
-	char		*ligne;
-	char		buf[BUFF_SIZE + 1];
-	static char	stash[FD_SIZE];
+	int	res;
 
 	res = 1;
-	while (is_new_line(stash) < 0 && res != 0)
+	while (ft_new_line(stash) < 0 && res)
 	{
-		res = read(fd, buf, BUFF_SIZE);
-		buf[res] = '\0';
+		res = read(fd, buf, BUFFER_SIZE);
 		if (res == -1)
 			return (NULL);
-		if (res != 0)
+		buf[res] = '\0';
+		if (res > 0)
 		{
-			ft_strcat(stash, buf);
+			stash = ft_strjoin(stash, buf);
+			if (!stash)
+				return (NULL);
 			clean_buf(buf);
 		}
 	}
-	if (res == -1)
+	return (stash);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*ligne;
+	static char	*stash;
+	char		*buf;
+
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
 		return (NULL);
+	stash = create_stash(stash, fd, buf);
+	if (!stash)
+		return (free(buf), NULL);
+	free(buf);
 	ligne = just_the_line(stash);
-	modif_stash(stash);
+	stash = clean_stash(stash);
+	if (!stash)
+		return (free(ligne), NULL);
+	if (!ligne)
+		return (free(stash), NULL);
 	return (ligne);
 }
