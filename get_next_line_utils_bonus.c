@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aducobu <aducobu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/03 16:15:28 by aducobu           #+#    #+#             */
-/*   Updated: 2023/05/14 13:55:08 by aducobu          ###   ########.fr       */
+/*   Created: 2023/05/14 12:04:17 by aducobu           #+#    #+#             */
+/*   Updated: 2023/05/14 13:54:52 by aducobu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	modif_stash(char *stash)
 {

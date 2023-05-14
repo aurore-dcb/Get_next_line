@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aducobu <aducobu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/03 16:15:10 by aducobu           #+#    #+#             */
-/*   Updated: 2023/05/14 12:06:44 by aducobu          ###   ########.fr       */
+/*   Created: 2023/05/13 16:57:25 by aducobu           #+#    #+#             */
+/*   Updated: 2023/05/14 12:04:55 by aducobu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strcat(char *dst, char *src)
 {
@@ -95,21 +95,21 @@ char	*create_stash(char *stash, int fd, char *buf)
 char	*get_next_line(int fd)
 {
 	char		*ligne;
-	static char	*stash;
+	static char	*stash[1024];
 	char		*buf;
 
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	stash = create_stash(stash, fd, buf);
-	if (!stash)
+	stash[fd] = create_stash(stash[fd], fd, buf);
+	if (!stash[fd])
 		return (free(buf), NULL);
 	free(buf);
-	ligne = just_the_line(stash);
-	stash = clean_stash(stash);
-	if (!stash)
+	ligne = just_the_line(stash[fd]);
+	stash[fd] = clean_stash(stash[fd]);
+	if (!stash[fd])
 		return (free(ligne), NULL);
 	if (!ligne)
-		return (free(stash), NULL);
+		return (free(stash[fd]), NULL);
 	return (ligne);
 }
